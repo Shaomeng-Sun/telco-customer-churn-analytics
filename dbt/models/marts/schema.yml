@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: dim_customer
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_contract_billing
+    columns:
+      - name: contract_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_services
+    columns:
+      - name: service_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fact_customer_churn
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: contract_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_contract_billing')
+                field: contract_id
+      - name: service_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_services')
+                field: service_id
+      - name: churn_flag
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+                quote: false
